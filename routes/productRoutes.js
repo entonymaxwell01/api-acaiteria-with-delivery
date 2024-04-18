@@ -14,5 +14,12 @@ router.route('/:id').get((req,res) => {
     productController.getOne(req,res);
 })
 
+router.route('/:id').put((req,res) => {
+    productController.update(req,res);
+})
+
+router.route('/:id').delete((req,res) => {
+    productController.delete(req,res);
+})
 
 module.exports = router;
