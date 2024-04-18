@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+
 
 app.use(cors());
 
@@ -20,6 +20,7 @@ connect();
 const routes = require('./routes/index.routes.js');
 
 app.use('/', routes);
+
 
 app.listen(3000, function(){
     console.log("Server is running on port 3000");
