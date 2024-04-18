@@ -103,11 +103,32 @@ const productController = {
 
             const productDeleted = await ProductModel.findByIdAndDelete(req.params.id);
             res.status(200).json({productDeleted,msg: "Product deleted successfully"});
-            
+
         } catch (error) {
             console.log(error);
         }
     },
+    addStock: async (req,res) => {
+        try {
+            const product = await ProductModel.findById(req.params.id);
+            const { quantity } = req.body;
+            if(!product){
+                res.status(404).json({msg: "Product not found"});
+                return;
+            }
+
+            if(quantity <= 0){
+                res.status(406).json({quantity,msg: "Missing required fields"});
+                return;
+            }
+
+            const response = await product.addStock(quantity);
+            res.status(200).json({response, msg: `${quantity} unit added to stock`});
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }; 
 
 

@@ -30,6 +30,16 @@ const productSchema = new Schema({
     }
 }, {timestamps: true});
 
+productSchema.methods.addStock = function(quantity){
+    this.stock += quantity;
+    return this.save();
+}
+
+productSchema.methods.removeStock = function(quantity){
+    this.stock -= quantity;
+    return this.save();
+}
+
 const Product = mongoose.model("Product", productSchema);
 
 module.exports = { Product, productSchema }
