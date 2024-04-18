@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { type } = require("repair");
 
 const { Schema } = mongoose;
 
@@ -16,6 +17,10 @@ const productSchema = new Schema({
         required: true,
     },
     price: {
+        type: Number,
+        required: true,
+    },
+    stock: {
         type: Number,
         required: true,
     },
