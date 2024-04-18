@@ -22,4 +22,8 @@ router.route('/:id').delete((req,res) => {
     productController.delete(req,res);
 })
 
+router.route('/addStock/:id').put((req,res) => {
+    productController.addStock(req,res);
+})
+
 module.exports = router;
