@@ -128,6 +128,28 @@ const productController = {
         } catch (error) {
             console.log(error);
         }
+    },
+
+    removeStock: async (req,res) => {
+        try {
+            const product = await ProductModel.findById(req.params.id);
+            const { quantity } = req.body;
+
+            if(!product){
+                res.status(404).json({msg: "Product not found"});
+                return;
+            }
+
+            if(quantity <= 0){
+                res.status(406).json({quantity,msg: "Missing required fields"});
+                return;
+            }
+
+            const response = await product.removeStock(quantity);
+            res.status(200).json({response, msg: `${quantity} unit removed from stock`});
+        } catch (error) {
+            console.log(error);
+        }
     }
 }; 
 
