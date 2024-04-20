@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { User } = require("../modules/User");
 
 const { Schema } = mongoose;
 
@@ -10,6 +11,6 @@ const adminSchema = new Schema({
     },
 }, { timestamps: true });
 
-const Admin = mongoose.model("Admin", adminSchema);
+const Admin = User.discriminator("Admin", adminSchema);
 
 module.exports = { Admin, adminSchema }
