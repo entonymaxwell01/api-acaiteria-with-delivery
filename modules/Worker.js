@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");;
+const mongoose = require("mongoose");
+const { User } = require("../modules/User");
+
 
 const { Schema } = mongoose;
 
@@ -10,6 +12,6 @@ const workerSchema = new Schema({
 }, { timestamps: true });
 
 
-const Worker = mongoose.model("Worker", workerSchema);
+const Worker = User.discriminator("Worker", workerSchema);
 
 module.exports = { Worker, workerSchema }
