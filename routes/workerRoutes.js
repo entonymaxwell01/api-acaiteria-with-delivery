@@ -6,5 +6,13 @@ router.route('/register').post((req,res) => {
     workerController.create(req,res);
 });
 
+router.route('/').get((req,res) => {
+    workerController.getAll(req,res);
+});
+
+router.route('/:id').get((req,res) => {
+    workerController.getOne(req,res);
+})
+
 
 module.exports = router;
