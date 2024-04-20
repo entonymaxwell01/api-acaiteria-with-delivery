@@ -55,7 +55,7 @@ const workerController = {
                 office: req.body.office,
             };
 
-            const workerUpdate = await WorkerModel.findByIdAndUpdate(id);
+            const workerUpdate = await WorkerModel.findByIdAndUpdate(id,worker);
 
             if(!req.body.name || !req.body.cpf || !req.body.password || !req.body.email || !req.body.phone || !req.body.office){
                 res.status(400).json({msg: "Missing fields"});

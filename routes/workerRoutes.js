@@ -14,5 +14,9 @@ router.route('/:id').get((req,res) => {
     workerController.getOne(req,res);
 })
 
+router.route('/:id').put((req,res) => {
+    workerController.update(req,res);
+});
+
 
 module.exports = router;
