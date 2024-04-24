@@ -6,7 +6,13 @@ const userController = {
         try {  
 
             const { cpf, email, phone } = req.body;
-            const userExists = await UserModel.findOne ({ cpf: cpf }) || await UserModel.findOne ({ email: email }) || await UserModel.findOne ({ phone: phone });
+            const userExists = await UserModel.findOne ({ 
+                $or: [
+                    { cpf: cpf },
+                    { email: email },
+                    { phone: phone }
+                ]
+             });
 
             if(!req.body.name || !req.body.cpf || !req.body.password || !req.body.email || !req.body.phone){
                 res.status(406).json({msg: "Missing required fields"});
