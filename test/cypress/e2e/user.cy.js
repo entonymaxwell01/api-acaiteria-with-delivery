@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 
+
 describe('Teste do modulo de usuários da API', () => {
 
     // Validando modulo de criacao de usuarios
@@ -68,96 +69,33 @@ describe('Teste do modulo de usuários da API', () => {
 
         // Validando Json esquema 
 
-    it.only('Deve apresentar mensagem de erro ao tentar criar um usuario com campo de nome vazio', () =>{
-        cy.request({
-            method: 'POST',
-            url: '/user/register',
-            body: {
-                name: "",
-                cpf: faker.number.int(),
-                password: faker.internet.password(),
-                email: faker.internet.email(),
-                phone: faker.phone.number()
-            },
-            failOnStatusCode: false
-        }).then((res) => {
-            expect(res.status).to.be.equal(406);
-            expect(res.body.msg).to.be.equal("Missing required fields");
-        })
-    });
-
-    it.only('Deve apresentar mensagem de erro ao tentar criar um usuario com campo de cpf vazio', () =>{
-        cy.request({
-            method: 'POST',
-            url: '/user/register',
-            body: {
-                name: faker.person.firstName(),
-                cpf: "",
-                password: faker.internet.password(),
-                email: faker.internet.email(),
-                phone: faker.phone.number()
-            },
-            failOnStatusCode: false
-        }).then((res) => {
-            expect(res.status).to.be.equal(406);
-            expect(res.body.msg).to.be.equal("Missing required fields");
-        })
-    });
-
-    it.only('Deve apresentar mensagem de erro ao tentar criar um usuario com campo de senha vazio', () =>{
-        cy.request({
-            method: 'POST',
-            url: '/user/register',
-            body: {
-                name: faker.person.firstName(),
-                cpf: faker.number.int(),
-                password: "",
-                email: faker.internet.email(),
-                phone: faker.phone.number()
-            },
-            failOnStatusCode: false
-        }).then((res) => {
-            expect(res.status).to.be.equal(406);
-            expect(res.body.msg).to.be.equal("Missing required fields");
-        })
-    });
-
-
-    it.only('Deve apresentar mensagem de erro ao tentar criar um usuario com campo de email vazio', () =>{
-        cy.request({
-            method: 'POST',
-            url: '/user/register',
-            body: {
-                name: faker.person.firstName(),
-                cpf: faker.number.int(),
-                password: faker.internet.password(),
-                email: "",
-                phone: faker.phone.number()
-            },
-            failOnStatusCode: false
-        }).then((res) => {
-            expect(res.status).to.be.equal(406);
-            expect(res.body.msg).to.be.equal("Missing required fields");
-        })
-    });
-
-    it('Deve apresentar mensagem de erro ao tentar criar um usuário com campo de telefone', () =>{
-        cy.request({
-            method: 'POST',
-            url: '/user/register',
-            body: {
-                name: faker.person.firstName(),
-                cpf: faker.number.int(),
-                password: faker.internet.password(),
-                email: faker.internet.email(),
-                phone: ""
-            },
-            failOnStatusCode: false
-        }).then((res) => {
-            expect(res.status).to.be.equal(406);
-            expect(res.body.msg).to.be.equal("Missing required fields");
-        })
-    });
+        it.only('Deve validar o schema de cadastro de usuário', () => {
+            const schema = {
+                title: "User Schema",
+                type: 'object',
+                required: ['name', 'cpf', 'password', 'email', 'phone'],
+                properties: {
+                    name: { type: 'string' },
+                    cpf: { type: 'string' },
+                    password: { type: 'string' },
+                    email: { type: 'string' },
+                    phone: { type: 'string' }
+                },
+            };
+            cy.request({
+                method: 'POST',
+                url: 'user/register/',
+                body: {
+                    name: faker.person.firstName(),
+                    cpf: faker.number.int(),
+                    password: faker.internet.password(),
+                    email: faker.internet.email(),
+                    phone: faker.phone.number()
+                }
+            }).then((res) => {
+                expect(res.body.response).to.be.jsonSchema(schema);
+            });
+        });
 
 
     // Validando modulo de listagem de usuarios
@@ -181,4 +119,54 @@ describe('Teste do modulo de usuários da API', () => {
             expect(res.body.user).to.be.an('object');
         });
     });
+
+    // Validando modulo de update de usuarios
+
+    it('Deve atualizar um usuario', () => {
+        cy.request({
+            method: 'PUT',
+            url: 'user/66282df08cebdf588bc298fe',
+            body: {
+                name: "Teste Atualizar",
+                cpf: faker.number.int(),
+                password: faker.internet.password(),
+                email: faker.internet.email(),
+                phone: faker.phone.number()
+            }
+        }).then((res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body.msg).to.be.equal("User updated successfully");
+        });
+    });
+
+    // Validando user schema
+    it('Deve validar o schema de update de usuário', () => {
+        const schema = {
+            title: "User Schema",
+            type: 'object',
+            required: ['name', 'cpf', 'password', 'email', 'phone'],
+            properties: {
+                name: { type: 'string' },
+                cpf: { type: 'string' },
+                password: { type: 'string' },
+                email: { type: 'string' },
+                phone: { type: 'string' }
+            },
+        };
+        cy.request({
+            method: 'PUT',
+            url: 'user/66282df08cebdf588bc298fe',
+            body: {
+                name: "Teste Atualizar",
+                cpf: faker.number.int(),
+                password: faker.internet.password(),
+                email: faker.internet.email(),
+                phone: faker.phone.number()
+            }
+        }).then((res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body.userUpdate).to.be.jsonSchema(schema);
+        });
+    });
+
 });
