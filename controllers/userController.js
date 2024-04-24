@@ -66,6 +66,7 @@ const userController = {
 
     update:  async (req,res) => {
         try {
+            const { cpf, email, phone } = req.body;
             const id = req.params.id;
             const user = {
                 name: req.body.name,
@@ -74,18 +75,33 @@ const userController = {
                 email: req.body.email,
                 phone: req.body.phone,
             }
-    
-            const userUpdate = await UserModel.findByIdAndUpdate(id,user);
-    
+
             if(!req.body.name || !req.body.cpf || !req.body.password || !req.body.email || !req.body.phone){
                 res.status(406).json({msg: "Missing required fields"});
                 return;
             }
     
+            const existingUser = await UserModel.findOne({
+                $or: [
+                    { cpf: cpf },
+                    { email: email },
+                    { phone: phone }
+                ],
+                _id: { $ne: id } // Exclua o usuário atual da pesquisa
+            });
+
+            if (existingUser) {
+                res.status(409).json({ msg: "CPF, email or phone number already exists" });
+                return;
+            }
+
+            const userUpdate = await UserModel.findByIdAndUpdate(id,user);
+
             if(!userUpdate){
                 res.status(404).json({msg: "User not found"});
                 return;
             }
+
 
             res.status(200).json({userUpdate, msg: "User updated successfully"});
 
