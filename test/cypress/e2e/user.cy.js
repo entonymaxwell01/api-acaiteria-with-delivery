@@ -67,9 +67,9 @@ describe('Teste do modulo de usuários da API', () => {
         })
     });
 
-        // Validando Json esquema 
+        // Validando Json esquema para cadastro de usuario
 
-        it.only('Deve validar o schema de cadastro de usuário', () => {
+        it('Deve validar o schema de cadastro de usuário', () => {
             const schema = {
                 title: "User Schema",
                 type: 'object',
@@ -139,7 +139,7 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
-    // Validando user schema
+    // Validando user schema para update de usuario
     it('Deve validar o schema de update de usuário', () => {
         const schema = {
             title: "User Schema",
@@ -166,6 +166,24 @@ describe('Teste do modulo de usuários da API', () => {
         }).then((res) => {
             expect(res.status).to.be.equal(200);
             expect(res.body.userUpdate).to.be.jsonSchema(schema);
+        });
+    });
+
+    it.only('Deve apresentar mensagem de erro ao tentar atualizar um usuário inexistente', () =>{
+        cy.request({
+            method: 'PUT',
+            url: 'user/16282df08cebdf588bc298fe',
+            body: {
+                name: faker.person.firstName(),
+                cpf: faker.number.int(),
+                password: faker.internet.password(),
+                email: faker.internet.email(),
+                phone: faker.phone.number()
+            },
+            failOnStatusCode: false
+        }).then((res) => {
+            expect(res.status).to.be.equal(404);
+            expect(res.body.msg).to.be.equal("User not found");
         });
     });
 
