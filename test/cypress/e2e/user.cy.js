@@ -203,7 +203,7 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
-    it.only('Deve apresentar mensagem de erro ao tentar atualizar um usuario com um email já existente', () => {
+    it('Deve apresentar mensagem de erro ao tentar atualizar um usuario com um email já existente', () => {
         cy.request({
             method: 'PUT',
             url: 'user/661e9aef5b4df67f8710af82',
@@ -239,4 +239,27 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
+    // Validando modulo de deletar usuario
+
+    it('Deve deletar um usuario', () => {
+        cy.request({
+            method: 'DELETE',
+            url: 'user/66290e424297d83b25fba2ce',
+
+        }).then((res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body.msg).to.be.equal("User deleted successfully");
+        });
+    });
+
+    it.only('Deve apresentar mensagem de erro ao tentar deletar um usuario inexistente', () =>{
+        cy.request({
+            method: 'DELETE',
+            url: 'user/16290e424297d83b25fba2ce',
+            failOnStatusCode: false
+        }).then((res) => {
+            expect(res.status).to.be.equal(404);
+            expect(res.body.msg).to.be.equal("User not found");
+        });
+    });
 });
