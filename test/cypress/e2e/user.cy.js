@@ -252,12 +252,35 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
-    it.only('Deve apresentar mensagem de erro ao tentar deletar um usuario inexistente', () =>{
+    it('Deve apresentar mensagem de erro ao tentar deletar um usuario inexistente', () =>{
         cy.request({
             method: 'DELETE',
             url: 'user/16290e424297d83b25fba2ce',
             failOnStatusCode: false
         }).then((res) => {
+            expect(res.status).to.be.equal(404);
+            expect(res.body.msg).to.be.equal("User not found");
+        });
+    });
+
+    // Validando modulo de login
+    it('Deve fazer login de um usuario', () => {
+        cy.login("teste@01.com", "12345").then((res) => {
+            expect(res.status).to.be.equal(200);
+            expect(res.body.msg).to.be.equal("Login successfully");
+            expect(res.body).to.an('object');
+        });
+    });
+
+    it('Deve apresentar mensagem de erro ao tentar fazer login com credenciais incorretas', () =>{
+        cy.login("teste@01.com", "123").then((res) => {
+            expect(res.status).to.be.equal(401);
+            expect(res.body.msg).to.be.equal("Invalid password");
+        });
+    });
+
+    it.only('Deve apresentar mensagem de erro ao tentar fazer login de um usuario inexistente', () =>{
+        cy.login("testeinvalido@", "123").then((res) => {
             expect(res.status).to.be.equal(404);
             expect(res.body.msg).to.be.equal("User not found");
         });

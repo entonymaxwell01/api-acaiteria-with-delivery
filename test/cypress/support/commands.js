@@ -42,3 +42,14 @@ Cypress.Commands.add('createUser', () => {
 
 });
 
+Cypress.Commands.add('login', (email,password) => {
+    cy.request({
+        method: 'POST',
+        url: '/user/login',
+        body: {
+            email: email,
+            password: password,
+        },
+        failOnStatusCode: false
+    })
+});

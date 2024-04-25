@@ -140,7 +140,13 @@ const userController = {
 
     login: async (req,res) => {
         const { email, cpf, phone, password } = req.body;
-        const user = await UserModel.findOne({ email: email }) || await UserModel.findOne({ cpf: cpf }) || await UserModel.findOne({phone: phone});
+        const user = await UserModel.findOne({ 
+            $or: [
+                { cpf: cpf },
+                { email: email },
+                { phone: phone }
+            ]
+        });
 
         if(!user){
             res.status(404).json({msg: "User not found"});
