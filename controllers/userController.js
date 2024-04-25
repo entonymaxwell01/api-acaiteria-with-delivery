@@ -8,6 +8,7 @@ const userController = {
             const { cpf, email, phone } = req.body;
             const userExists = await UserModel.findOne ({ 
                 $or: [
+                    //Procurando usuario pelo cpf, email ou telefone
                     { cpf: cpf },
                     { email: email },
                     { phone: phone }
@@ -88,12 +89,13 @@ const userController = {
             }
     
             const existingUser = await UserModel.findOne({
+                //Procurando usuario pelo cpf, email ou telefone
                 $or: [
                     { cpf: cpf },
                     { email: email },
                     { phone: phone }
                 ],
-                _id: { $ne: id } // Exclua o usuário atual da pesquisa
+                _id: { $ne: id } // Excluindo o usuário atual da pesquisa
             });
 
             if (existingUser) {

@@ -1,7 +1,5 @@
 import { faker } from '@faker-js/faker';
 
-
-
 describe('Teste do modulo de usuários da API', () => {
 
     // Validando modulo de criacao de usuarios
@@ -169,7 +167,7 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
-    it.only('Deve apresentar mensagem de erro ao tentar atualizar um usuário inexistente', () =>{
+    it('Deve apresentar mensagem de erro ao tentar atualizar um usuário inexistente', () =>{
         cy.request({
             method: 'PUT',
             url: 'user/16282df08cebdf588bc298fe',
@@ -184,6 +182,60 @@ describe('Teste do modulo de usuários da API', () => {
         }).then((res) => {
             expect(res.status).to.be.equal(404);
             expect(res.body.msg).to.be.equal("User not found");
+        });
+    });
+
+    it('Deve apresentar mensagem de erro ao tentar atualizar um usuario com um cpf já existente', () => {
+        cy.request({
+            method: 'PUT',
+            url: 'user/661e9aef5b4df67f8710af82',
+            body: {
+                name: faker.person.firstName(),
+                cpf: "100",
+                password: faker.internet.password(),
+                email: faker.internet.email(),
+                phone: faker.phone.number()
+            },
+            failOnStatusCode: false
+        }).then((res) => {
+            expect(res.status).to.be.equal(409);
+            expect(res.body.msg).to.be.equal("CPF, email or phone number already exists");
+        });
+    });
+
+    it.only('Deve apresentar mensagem de erro ao tentar atualizar um usuario com um email já existente', () => {
+        cy.request({
+            method: 'PUT',
+            url: 'user/661e9aef5b4df67f8710af82',
+            body: {
+                name: faker.person.firstName(),
+                cpf: faker.number.int(),
+                password: faker.internet.password(),
+                email: "10",
+                phone: faker.phone.number()
+            },
+            failOnStatusCode: false
+        }).then((res) => {
+            expect(res.status).to.be.equal(409);
+            expect(res.body.msg).to.be.equal("CPF, email or phone number already exists");
+        });
+    });
+
+    it('Deve apresentar mensagem de erro ao tentar atualizar um usuario com um telefone já existente', () => {
+        cy.request({
+            method: 'PUT',
+            url: 'user/661e9aef5b4df67f8710af82',
+            body: {
+                name: faker.person.firstName(),
+                cpf: faker.number.int(),
+                password: faker.internet.password(),
+                email: faker.internet.email(),
+                phone: "12345"
+            },
+            failOnStatusCode: false
+        }).then((res) => {
+            expect(res.status).to.be.equal(409);
+            expect(res.body.msg).to.be.equal("CPF, email or phone number already exists");
         });
     });
 
