@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+const {expect} = require("chai").use(require('chai-json-schema'));
 
 describe('Teste do modulo de usuários da API', () => {
 
@@ -17,7 +18,7 @@ describe('Teste do modulo de usuários da API', () => {
             url: '/user/register',
             body: {
                 name: faker.person.firstName(),
-                cpf: "001",
+                cpf: "1000",
                 password: faker.internet.password(),
                 email: faker.internet.email(),
                 phone: faker.phone.number()
@@ -279,7 +280,7 @@ describe('Teste do modulo de usuários da API', () => {
         });
     });
 
-    it.only('Deve apresentar mensagem de erro ao tentar fazer login de um usuario inexistente', () =>{
+    it('Deve apresentar mensagem de erro ao tentar fazer login de um usuario inexistente', () =>{
         cy.login("testeinvalido@", "123").then((res) => {
             expect(res.status).to.be.equal(404);
             expect(res.body.msg).to.be.equal("User not found");
